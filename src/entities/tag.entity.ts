@@ -1,34 +1,39 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   ManyToMany,
   JoinTable,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity('Tag')
 export class Tag {
+  @ApiProperty()
   @PrimaryGeneratedColumn('uuid', {
     name: 'tag_id',
   })
   tagId: string;
 
+  @ApiProperty()
   @Column('varchar', {
     name: 'name',
     nullable: false,
   })
   name: string;
 
-  @ManyToMany(() => User, (user) => user.userId)
-  @JoinTable({
-    name: 'tag_user',
-    joinColumn: {
-      name: 'tag_id',
-    },
-    inverseJoinColumn: {
-      name: 'user_id',
-    },
+  @ApiProperty()
+  @Column('varchar', {
+    name: 'color',
+    nullable: false,
   })
+  color: string;
+
+  @ApiProperty()
+  @ManyToOne(() => User, (user) => user.userId)
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }
