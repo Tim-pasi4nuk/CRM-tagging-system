@@ -6,6 +6,7 @@ import {
   OneToMany,
   ManyToMany,
   JoinTable,
+  ManyToOne,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Tag } from './tag.entity';
@@ -25,12 +26,15 @@ export class Order {
   })
   name: string;
 
-  @ApiProperty()
-  @OneToMany(() => User, (user) => user.userId)
+  @ApiProperty({ type: () => User })
+  @ManyToOne(() => User, (user) => user.userId)
   user: User;
 
   @ApiProperty()
-  @ManyToMany(() => Tag, (tag) => tag.tagId)
+  @ManyToMany(() => Tag, (tag) => tag.order, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   @JoinTable({
     name: 'order_tag_ids',
     joinColumn: {
@@ -40,5 +44,5 @@ export class Order {
       name: 'tag_id',
     },
   })
-  tags: Tag[];
+  tags?: Tag[];
 }

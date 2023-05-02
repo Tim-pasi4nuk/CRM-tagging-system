@@ -4,11 +4,11 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToMany,
-  JoinTable,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { Order } from './order.entity';
 
 @Entity('Tag')
 export class Tag {
@@ -33,6 +33,10 @@ export class Tag {
   color: string;
 
   @ApiProperty()
+  @ManyToMany(() => Order, (order) => order.tags, {onDelete: 'CASCADE'})
+  order: Order[];
+
+  @ApiProperty({ type: () => User })
   @ManyToOne(() => User, (user) => user.userId)
   @JoinColumn({ name: 'user_id' })
   user: User;
